@@ -56,6 +56,19 @@ public class SnakeView extends JPanel {
         frame.setVisible(true);
     }
 
+    public void exitConfirmation() {
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to exit the program?",
+                "Exit Program Message Box",
+                JOptionPane.YES_NO_OPTION
+        );
+        if (confirmation == JOptionPane.YES_OPTION) {
+            frame.dispose();
+            System.exit(0);
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

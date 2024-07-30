@@ -1,7 +1,7 @@
-import java.awt.event.*;
+import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Random;
-import javax.swing.*;
 
 public class SnakeModel {
     private final Random rand;
@@ -30,6 +30,10 @@ public class SnakeModel {
         this.direction = direction;
     }
 
+    public char getDirection() {
+        return direction;
+    }
+
     public int[] getSnakeX() {
         return snakeX;
     }
@@ -46,6 +50,9 @@ public class SnakeModel {
         return appleX;
     }
 
+    public Timer getTimer() {
+        return this.timer;
+    }
 
     public void startGame(ActionListener actionListener) {
         timer = new Timer(delay, actionListener);
