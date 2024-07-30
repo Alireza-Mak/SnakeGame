@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Random;
 
 public class SnakeView extends JPanel {
     private JFrame frame;
@@ -46,7 +46,6 @@ public class SnakeView extends JPanel {
         return screenProperties;
     }
 
-
     public void initialMainFrame() {
         frame = new JFrame("Snake Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,5 +56,31 @@ public class SnakeView extends JPanel {
         frame.setVisible(true);
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
+        g.setColor(Color.BLACK);
+        for (int x = 0; x < screenProperties.get("SCREEN_WIDTH") / screenProperties.get("UNIT_SIZE"); x++) {
+            g.drawLine(x * screenProperties.get("UNIT_SIZE"), 0, x * screenProperties.get("UNIT_SIZE"), screenProperties.get("SCREEN_HEIGHT"));
+        }
+        for (int x = 0; x < screenProperties.get("SCREEN_HEIGHT") / screenProperties.get("UNIT_SIZE"); x++) {
+            g.drawLine(0, x * screenProperties.get("UNIT_SIZE"), screenProperties.get("SCREEN_WIDTH"), x * screenProperties.get("UNIT_SIZE"));
+        }
+
+
+        g.setColor(Color.GREEN);
+        g.fillOval(this.appleX, this.appleY, screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
+
+
+        for (int y = 0; y < snakeX.length; y++) {
+            if (y == 0) {
+                g.setColor(Color.RED);
+                g.fillRoundRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"), snakeX[y], snakeX[y]);
+            } else {
+                g.setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+                g.fillRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
+            }
+        }
+    }
 }
