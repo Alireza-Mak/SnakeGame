@@ -1,7 +1,7 @@
-import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+
 
 public class SnakeModel {
     private final Random rand;
@@ -84,6 +84,19 @@ public class SnakeModel {
             case 'D':
                 snakeY[0] += unitSize;
                 break;
+        }
+    }
+
+    public void checkApple() {
+        if (appleX == snakeX[0] && appleY == snakeY[0]) {
+            snakeLength++;
+            snakeX = Arrays.copyOf(snakeX, snakeLength);
+            snakeY = Arrays.copyOf(snakeY, snakeLength);
+            snakeX[snakeLength - 1] = snakeX[snakeLength - 2];
+            snakeY[snakeLength - 1] = snakeY[snakeLength - 2];
+            delay -= 10;
+            timer.setDelay(delay);
+            createApple();
         }
     }
 }

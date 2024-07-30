@@ -51,6 +51,11 @@ public class SnakeController {
         @Override
         public void actionPerformed(ActionEvent e) {
             snakeModel.moveSnake(snakeView.getScreenProperties().get("UNIT_SIZE"));
+            snakeModel.checkApple();
+            snakeView.setAppleX(snakeModel.getAppleX());
+            snakeView.setAppleY(snakeModel.getAppleY());
+            snakeView.setSnakeX(snakeModel.getSnakeX());
+            snakeView.setSnakeY(snakeModel.getSnakeY());
             snakeView.repaint();
         }
     }
