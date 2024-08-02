@@ -17,6 +17,7 @@ public class SnakeModel {
     private Timer timer;
     private int delay = 100;
     private int score;
+    private boolean isRunning;
 
     public SnakeModel() {
         rand = new Random();
@@ -38,6 +39,8 @@ public class SnakeModel {
     }
 
     public int getScore() { return score; }
+
+    public boolean getIsRunning() { return isRunning; }
 
     public int[] getSnakeX() {
         return snakeX;
@@ -61,7 +64,8 @@ public class SnakeModel {
 
     public void startGame(ActionListener actionListener) {
         timer = new Timer(delay, actionListener);
-        score =0;
+        score = 0;
+        isRunning = true;
         timer.start();
         createApple();
     }
@@ -104,6 +108,13 @@ public class SnakeModel {
             score++;
             timer.setDelay(delay);
             createApple();
+        }
+    }
+
+    public void checkCollision() {
+        if (snakeX[0] >= screenProperties.get("SCREEN_WIDTH") || snakeX[0] < 0 ||
+                snakeY[0] >= screenProperties.get("SCREEN_HEIGHT") || snakeY[0] < 0) {
+                    isRunning = false;
         }
     }
 }

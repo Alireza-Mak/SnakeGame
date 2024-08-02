@@ -12,6 +12,7 @@ public class SnakeView extends JPanel {
     private int[] snakeX;
     private int[] snakeY;
     private int score;
+    private boolean isRunning;
 
     public SnakeView() {
         this.screenProperties = new HashMap<>() {
@@ -43,7 +44,13 @@ public class SnakeView extends JPanel {
         this.appleY = appleY;
     }
 
-    public void setScore(int score) { this.score = score; }
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setIsRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+    }
 
     public Map<String, Integer> getScreenProperties() {
         return screenProperties;
@@ -84,27 +91,47 @@ public class SnakeView extends JPanel {
             g.drawLine(0, x * screenProperties.get("UNIT_SIZE"), screenProperties.get("SCREEN_WIDTH"), x * screenProperties.get("UNIT_SIZE"));
         }
 
+        if (isRunning) {
+            g.setColor(Color.GREEN);
+            g.fillOval(this.appleX, this.appleY, screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
 
-        g.setColor(Color.GREEN);
-        g.fillOval(this.appleX, this.appleY, screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
 
-
-        for (int y = 0; y < snakeX.length; y++) {
-            if (y == 0) {
-                g.setColor(Color.RED);
-                g.fillRoundRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"),screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
-            } else {
-                g.setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
-                g.fillRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
+            for (int y = 0; y < snakeX.length; y++) {
+                if (y == 0) {
+                    g.setColor(Color.RED);
+                    g.fillRoundRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
+                } else {
+                    g.setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
+                    g.fillRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
+                }
             }
+
+            g.setColor(Color.BLACK);
+            Font scoreFont = new Font("Ink Free", Font.BOLD, 25);
+            g.setFont(scoreFont);
+            FontMetrics score_font_metric = g.getFontMetrics();
+            String scoreString = "Score: " + this.score;
+            g.drawString(scoreString, (screenProperties.get("SCREEN_WIDTH") - score_font_metric.stringWidth(scoreString)) / 2, scoreFont.getSize());
+
+        } else {
+            gameOver(g);
         }
+    }
 
-        g.setColor(Color.BLACK);
-        Font score_font =  new Font("Ink Free", Font.BOLD, 25);
-        g.setFont(score_font);
-        FontMetrics score_font_metric =g.getFontMetrics();
-        String score ="Score:"+ this.score;
-        g.drawString(score,(screenProperties.get("SCREEN_WIDTH")-score_font_metric.stringWidth(score))/2,score_font.getSize());
+    private void gameOver(Graphics g) {
+        Font gameOverFont = new Font("Ink Free", Font.BOLD, 55);
+        g.setFont(gameOverFont);
+        FontMetrics gameOverFontMetric = g.getFontMetrics();
+        String gameOverString = "GameOver";
+        g.drawString(gameOverString, (screenProperties.get("SCREEN_WIDTH") - gameOverFontMetric.stringWidth(gameOverString)) / 2,
+                (screenProperties.get("SCREEN_HEIGHT") - gameOverFontMetric.getHeight()) / 2);
 
+
+        Font scoreFont = new Font("Ink Free", Font.BOLD, 35);
+        g.setFont(scoreFont);
+        FontMetrics score_font_metric = g.getFontMetrics();
+        String scoreString = "Your final Score is " + this.score;
+        g.drawString(scoreString, (screenProperties.get("SCREEN_WIDTH") - score_font_metric.stringWidth(scoreString)) / 2,
+                (screenProperties.get("SCREEN_HEIGHT") - score_font_metric.getHeight()) / 2 + score_font_metric.getHeight());
     }
 }

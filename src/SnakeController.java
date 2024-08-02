@@ -18,6 +18,7 @@ public class SnakeController {
         this.snakeView.setSnakeX(this.snakeModel.getSnakeX());
         this.snakeView.setSnakeY(this.snakeModel.getSnakeY());
         this.snakeView.setScore(this.snakeModel.getScore());
+        this.snakeView.setIsRunning(this.snakeModel.getIsRunning());
         this.snakeView.addKeyListener(new MyKeyListener());
     }
 
@@ -53,11 +54,13 @@ public class SnakeController {
         public void actionPerformed(ActionEvent e) {
             snakeModel.moveSnake(snakeView.getScreenProperties().get("UNIT_SIZE"));
             snakeModel.checkApple();
+            snakeModel.checkCollision();
             snakeView.setAppleX(snakeModel.getAppleX());
             snakeView.setAppleY(snakeModel.getAppleY());
             snakeView.setSnakeX(snakeModel.getSnakeX());
             snakeView.setSnakeY(snakeModel.getSnakeY());
             snakeView.setScore(snakeModel.getScore());
+            snakeView.setIsRunning(snakeModel.getIsRunning());
             snakeView.repaint();
         }
     }
