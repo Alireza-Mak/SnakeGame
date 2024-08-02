@@ -17,6 +17,7 @@ public class SnakeController {
         this.snakeView.setAppleY(this.snakeModel.getAppleY());
         this.snakeView.setSnakeX(this.snakeModel.getSnakeX());
         this.snakeView.setSnakeY(this.snakeModel.getSnakeY());
+        this.snakeView.setScore(this.snakeModel.getScore());
         this.snakeView.addKeyListener(new MyKeyListener());
     }
 
@@ -56,6 +57,7 @@ public class SnakeController {
             snakeView.setAppleY(snakeModel.getAppleY());
             snakeView.setSnakeX(snakeModel.getSnakeX());
             snakeView.setSnakeY(snakeModel.getSnakeY());
+            snakeView.setScore(snakeModel.getScore());
             snakeView.repaint();
         }
     }

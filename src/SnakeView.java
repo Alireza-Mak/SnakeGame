@@ -11,6 +11,7 @@ public class SnakeView extends JPanel {
     private int appleY;
     private int[] snakeX;
     private int[] snakeY;
+    private int score;
 
     public SnakeView() {
         this.screenProperties = new HashMap<>() {
@@ -41,6 +42,8 @@ public class SnakeView extends JPanel {
     public void setAppleY(int appleY) {
         this.appleY = appleY;
     }
+
+    public void setScore(int score) { this.score = score; }
 
     public Map<String, Integer> getScreenProperties() {
         return screenProperties;
@@ -89,11 +92,19 @@ public class SnakeView extends JPanel {
         for (int y = 0; y < snakeX.length; y++) {
             if (y == 0) {
                 g.setColor(Color.RED);
-                g.fillRoundRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"), snakeX[y], snakeX[y]);
+                g.fillRoundRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"),screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
             } else {
                 g.setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
                 g.fillRect(snakeX[y], snakeY[y], screenProperties.get("UNIT_SIZE"), screenProperties.get("UNIT_SIZE"));
             }
         }
+
+        g.setColor(Color.BLACK);
+        Font score_font =  new Font("Ink Free", Font.BOLD, 25);
+        g.setFont(score_font);
+        FontMetrics score_font_metric =g.getFontMetrics();
+        String score ="Score:"+ this.score;
+        g.drawString(score,(screenProperties.get("SCREEN_WIDTH")-score_font_metric.stringWidth(score))/2,score_font.getSize());
+
     }
 }

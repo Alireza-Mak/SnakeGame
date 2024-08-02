@@ -1,6 +1,8 @@
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Random;
 
 
 public class SnakeModel {
@@ -14,6 +16,7 @@ public class SnakeModel {
     private char direction = 'R';
     private Timer timer;
     private int delay = 100;
+    private int score;
 
     public SnakeModel() {
         rand = new Random();
@@ -33,6 +36,8 @@ public class SnakeModel {
     public char getDirection() {
         return direction;
     }
+
+    public int getScore() { return score; }
 
     public int[] getSnakeX() {
         return snakeX;
@@ -56,6 +61,7 @@ public class SnakeModel {
 
     public void startGame(ActionListener actionListener) {
         timer = new Timer(delay, actionListener);
+        score =0;
         timer.start();
         createApple();
     }
@@ -95,6 +101,7 @@ public class SnakeModel {
             snakeX[snakeLength - 1] = snakeX[snakeLength - 2];
             snakeY[snakeLength - 1] = snakeY[snakeLength - 2];
             delay -= 10;
+            score++;
             timer.setDelay(delay);
             createApple();
         }
