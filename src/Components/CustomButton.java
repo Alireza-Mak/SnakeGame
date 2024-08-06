@@ -1,8 +1,9 @@
 package Components;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CustomButton extends JButton {
     private final int borderWidth;
@@ -19,12 +20,13 @@ public class CustomButton extends JButton {
     private Color textColor;
     private Color borderColor;
     private boolean isHovered;
+    private String text;
 
     public CustomButton(String text, int borderWidth) {
         this.borderWidth = borderWidth;
+        this.text = text;
         initializeButtonProperties();
         initializeColors();
-        setText(text);
         addMouseListener(new ButtonMouseListener());
     }
 
@@ -59,19 +61,22 @@ public class CustomButton extends JButton {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             int s = borderWidth;
-            int x = s;
-            int y = s;
-            int width = getWidth() - (2 * s);
-            int height = getHeight() - (2 * s);
+            int w = getWidth() - (2 * s);
+            int h = getHeight() - (2 * s);
 
             g2d.setColor(backgroundColor);
-            g2d.fillRoundRect(x, y, width, height, height, height);
+            g2d.fillRoundRect(s, s, w, h, h, h);
 
             g2d.setStroke(new BasicStroke(s));
             g2d.setColor(borderColor);
-            g2d.drawRoundRect(x, y, width, height, height, height);
+            g2d.drawRoundRect(s, s, w, h, h, h);
 
             setForeground(textColor);
+
+            FontMetrics fm = g2d.getFontMetrics();
+            int textX = (getWidth() - fm.stringWidth(text)) / 2;
+            int textY = (getHeight()) / 2 + ((getFont().getSize() / 12) * 3); // Adding 5 units to the Y position
+            g2d.drawString(this.text, textX, textY);
         }
         super.paintComponent(g);
     }
