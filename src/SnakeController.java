@@ -27,6 +27,9 @@ public class SnakeController {
         initializeGame();
         this.snakeView.addKeyListener(new SnakeGameKeyListener());
         this.snakeView.addResetButtonListener(new SnakeGameMouseListener());
+        this.snakeView.addMenuDisableGridListener(new AddMenuDisableGridListener());
+        this.snakeView.addMenuEnableGridListener(new AddMenuEnableGridListener());
+        this.snakeView.addMenuQuitListener(new AddMenuQuitListener());
     }
 
     private void initializeGame() {
@@ -73,11 +76,11 @@ public class SnakeController {
             if (snakeModel.getTimer() != null) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     handleEscapeKey();
-                } else {
-                    handleDirectionKey(e.getKeyCode());
                 }
+                handleDirectionKey(e.getKeyCode());
             }
         }
+
         /**
          * Updates the view with the current state of the model.
          */
@@ -99,6 +102,10 @@ public class SnakeController {
             }
         }
 
+        /**
+         * Handles the action when the "Escape" key is pressed.
+         * Stops the game timer if it is running and displays an exit confirmation dialog.
+         */
 
         private void handleEscapeKey() {
             if (snakeModel.getTimer().isRunning()) {
@@ -118,6 +125,49 @@ public class SnakeController {
             snakeModel.checkApple();
             snakeModel.checkCollision();
             updateView();
+        }
+    }
+
+    /**
+     * Handles the action event when the "Quit" menu item is selected.
+     * Stops the game timer, shows an exit confirmation dialog, and resumes the timer if not exiting.
+     */
+    private class AddMenuQuitListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (snakeModel.getTimer() != null) {
+                if (snakeModel.getTimer().isRunning()) {
+                    snakeModel.getTimer().stop();
+                    snakeView.showExitConfirmation();
+                }
+                snakeModel.getTimer().start();
+            } else {
+                snakeView.showExitConfirmation();
+            }
+        }
+    }
+
+    /**
+     * Handles the action event when the "Enable Grid" menu item is selected.
+     * Enables the grid display on the game board and repaints the view.
+     */
+    private class AddMenuEnableGridListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            snakeView.setShowingGrid(true);
+            snakeView.repaint();
+        }
+    }
+
+    /**
+     * Handles the action event when the "Disable Grid" menu item is selected.
+     * Disables the grid display on the game board and repaints the view.
+     */
+    private class AddMenuDisableGridListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            snakeView.setShowingGrid(false);
+            snakeView.repaint();
         }
     }
 }
