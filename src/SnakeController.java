@@ -79,10 +79,26 @@ public class SnakeController {
                 }
                 handleDirectionKey(e.getKeyCode());
             }
+            handleResetButtonKey(e.getKeyCode());
+        }
+
+        /**
+         * Handles the key press event for the reset button.
+         * If the Enter key is pressed, the game restarts and the reset button is hidden.
+         *
+         * @param keyCode the code of the key that was pressed.
+         */
+        private void handleResetButtonKey(int keyCode) {
+            if (keyCode == KeyEvent.VK_ENTER) {
+                startGame();
+                snakeView.getResetButton().setVisible(false);
+            }
         }
 
         /**
          * Updates the view with the current state of the model.
+         *
+          * @param keyCode the code of the key that was pressed.
          */
         private void handleDirectionKey(int keyCode) {
             snakeModel.getTimer().start();

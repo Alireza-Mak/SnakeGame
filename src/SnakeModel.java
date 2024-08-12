@@ -234,15 +234,24 @@ public class SnakeModel {
     }
 
     /**
-     * Checks if the snake has collided with the wall or itself.
+     * Determines if the snake has collided with the wall or itself.
      *
-     * @return True if there is a collision, false otherwise.
+     * @return {@code true} if the snake hits the wall or its own body, {@code false} otherwise.
      */
     private boolean isCollision() {
-        return snakeX[0] >= screenProperties.get("SCREEN_WIDTH") || snakeX[0] < 0 ||
-                snakeY[0] >= screenProperties.get("SCREEN_HEIGHT") || snakeY[0] < 0;
-    }
+        boolean isWallCollision = false, isSelfCollision = false;
 
+        if (snakeX[0] >= screenProperties.get("SCREEN_WIDTH") || snakeX[0] < 0 || snakeY[0] >= screenProperties.get("SCREEN_HEIGHT") || snakeY[0] < 0)
+            isWallCollision = true;
+
+        for (int i = 1; i < snakeLength; i++) {
+            if (snakeX[i] == snakeX[0] && snakeY[i] == snakeY[0]) {
+                isSelfCollision = true;
+                break;
+            }
+        }
+        return isWallCollision || isSelfCollision;
+    }
 
     /**
      * Stops the game timer.
