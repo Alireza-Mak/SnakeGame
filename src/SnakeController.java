@@ -30,6 +30,9 @@ public class SnakeController {
         this.snakeView.addMenuDisableGridListener(new AddMenuDisableGridListener());
         this.snakeView.addMenuEnableGridListener(new AddMenuEnableGridListener());
         this.snakeView.addMenuQuitListener(new AddMenuQuitListener());
+        this.snakeView.addEasyDifficultyListener(new AddEasyDifficultyListener());
+        this.snakeView.addMediumDifficultyListener(new AddMediumDifficultyListener());
+        this.snakeView.addHardDifficultyListener(new AddHardDifficultyListener());
     }
 
     private void initializeGame() {
@@ -38,7 +41,7 @@ public class SnakeController {
     }
 
     private void startGame() {
-        this.snakeModel.startGame(new SnakeActionListener());
+        this.snakeModel.startGame(new SnakeActionListener(), this.snakeView.getDifficulty());
         updateView();
     }
 
@@ -98,7 +101,7 @@ public class SnakeController {
         /**
          * Updates the view with the current state of the model.
          *
-          * @param keyCode the code of the key that was pressed.
+         * @param keyCode the code of the key that was pressed.
          */
         private void handleDirectionKey(int keyCode) {
             snakeModel.getTimer().start();
@@ -184,6 +187,47 @@ public class SnakeController {
         public void actionPerformed(ActionEvent e) {
             snakeView.setShowingGrid(false);
             snakeView.repaint();
+        }
+    }
+
+    /**
+     * Listener for setting the snake game difficulty to "easy".
+     * When triggered, this listener updates the model with the "easy" difficulty setting
+     * and ensures the easy difficulty radio button is selected in the view.
+     */
+    private class AddEasyDifficultyListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            snakeModel.setDifficulty(snakeView.removeHtml(snakeView.getEasyRadioButtonItem().getText()));
+            snakeView.getEasyRadioButtonItem().setSelected(true);
+        }
+    }
+
+    /**
+     * Listener for setting the snake game difficulty to "medium".
+     * When triggered, this listener updates the model with the "medium" difficulty setting
+     * and ensures the medium difficulty radio button is selected in the view.
+     */
+    private class AddMediumDifficultyListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Medium");
+            snakeModel.setDifficulty(snakeView.removeHtml(snakeView.getMediumRadioButtonItem().getText()));
+            snakeView.getMediumRadioButtonItem().setSelected(true);
+        }
+    }
+
+    /**
+     * Listener for setting the snake game difficulty to "hard".
+     * When triggered, this listener updates the model with the "hard" difficulty setting
+     * and ensures the hard difficulty radio button is selected in the view.
+     */
+    private class AddHardDifficultyListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Hard");
+            snakeModel.setDifficulty(snakeView.removeHtml(snakeView.getHardRadioButtonItem().getText()));
+            snakeView.getHardRadioButtonItem().setSelected(true);
         }
     }
 }

@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 
 /**
  * The SnakeModel class represents the game's state and logic.
@@ -27,6 +29,12 @@ public class SnakeModel {
     private int delay;
     private int score;
     private boolean isRunning;
+    private final Map<String, Integer> difficulty = new HashMap<>() {{
+        put("easy", 2);
+        put("medium", 4);
+        put("hard", 6);
+    }};
+    private int delayStep;
 
     /**
      * Constructor to initialize the SnakeModel.
@@ -133,7 +141,7 @@ public class SnakeModel {
      *
      * @param actionListener The ActionListener for the game timer.
      */
-    public void startGame(ActionListener actionListener) {
+    public void startGame(ActionListener actionListener, String difficulty) {
         score = 0;
         snakeLength = START_LENGTH;
         this.snakeX = new int[snakeLength];
@@ -141,6 +149,7 @@ public class SnakeModel {
         direction = 'R';
         isRunning = true;
         delay = DEFAULT_DELAY;
+        setDifficulty(difficulty);
         timer = new Timer(delay, actionListener);
         timer.start();
         createApple();
@@ -215,11 +224,24 @@ public class SnakeModel {
         snakeY[snakeLength - 1] = snakeY[snakeLength - 2];
     }
 
+    /**
+     * Updates the delay based on the current delay step.
+     * If a timer is active, the timer's delay is also updated.
+     */
     private void updateDelay() {
-        delay -= 3;
+        delay -= delayStep;
         if (timer != null) {
             timer.setDelay(delay);
         }
+    }
+
+    /**
+     * Sets the game's difficulty level by adjusting the delay step.
+     *
+     * @param difficulty the difficulty level as a string (e.g., "easy", "medium", "hard").
+     */
+    public void setDifficulty(String difficulty) {
+        delayStep = this.difficulty.get(difficulty.toLowerCase());
     }
 
     /**

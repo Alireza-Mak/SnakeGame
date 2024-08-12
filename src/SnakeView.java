@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-
 /**
  * The SnakeView class represents the graphical user interface for the Snake game.
  * It extends JPanel and handles the rendering of the game board, the snake, the apple,
@@ -46,6 +45,8 @@ public class SnakeView extends JPanel {
     private JMenuItem menuEnableGrid;
     private JMenuItem menuDisableGrid;
     private Boolean isShowingGrid = false;
+    private JRadioButtonMenuItem easyRadioButtonItem, mediumRadioButtonItem, hardRadioButtonItem;
+    private String difficulty;
 
     /**
      * Constructor for SnakeView class. Initializes the screen properties,
@@ -144,6 +145,18 @@ public class SnakeView extends JPanel {
         return screenProperties;
     }
 
+    public JRadioButtonMenuItem getEasyRadioButtonItem() {
+        return easyRadioButtonItem;
+    }
+
+    public JRadioButtonMenuItem getMediumRadioButtonItem() {
+        return mediumRadioButtonItem;
+    }
+
+    public JRadioButtonMenuItem getHardRadioButtonItem() {
+        return hardRadioButtonItem;
+    }
+
     /**
      * Initializes the main game window frame, setting up its properties and making it visible.
      */
@@ -152,6 +165,7 @@ public class SnakeView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         initializeMenuBar();
+
         frame.add(this);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -330,16 +344,21 @@ public class SnakeView extends JPanel {
         fileMenu.getAccessibleContext().setAccessibleDescription("This menu has only menu items");
 
         // Create a submenu(Grid)
-        JMenu submenu = new JMenu(htmlCreator("Grid Status"));
-        fileMenu.add(submenu);
+        JMenu submenuGrid = new JMenu(htmlCreator("Grid Status"));
+        fileMenu.add(submenuGrid);
 
-        //Child of submenu(Grid children)
+        //Child of submenuGrid(Grid children)
         menuEnableGrid = new JMenuItem(htmlCreator("Enable Grid"));
         menuEnableGrid.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0));
-        submenu.add(menuEnableGrid);
+        submenuGrid.add(menuEnableGrid);
         menuDisableGrid = new JMenuItem(htmlCreator("Disable Grid"));
         menuDisableGrid.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0));
-        submenu.add(menuDisableGrid);
+        submenuGrid.add(menuDisableGrid);
+
+        // Create Difficulty submenu
+        JMenu submenuDifficulty = getSubmenuDifficulty();
+
+        fileMenu.add(submenuDifficulty);
 
         // Create a separator in the menu
         fileMenu.addSeparator();
@@ -356,6 +375,32 @@ public class SnakeView extends JPanel {
 
         // Set the menu bar on the frame
         frame.setJMenuBar(menuBar);
+
+        difficulty = removeHtml(easyRadioButtonItem.getText()).toLowerCase();
+    }
+
+    private JMenu getSubmenuDifficulty() {
+        JMenu submenuDifficulty = new JMenu(htmlCreator("Select Difficulty"));
+
+        ButtonGroup difficultyGroup = new ButtonGroup();
+
+        easyRadioButtonItem = new JRadioButtonMenuItem(htmlCreator("Easy"));
+        easyRadioButtonItem.setSelected(true);
+        easyRadioButtonItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
+        difficultyGroup.add(easyRadioButtonItem);
+
+        mediumRadioButtonItem = new JRadioButtonMenuItem(htmlCreator("Medium"));
+        mediumRadioButtonItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK));
+        difficultyGroup.add(mediumRadioButtonItem);
+
+        hardRadioButtonItem = new JRadioButtonMenuItem(htmlCreator("Hard"));
+        hardRadioButtonItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK));
+        difficultyGroup.add(hardRadioButtonItem);
+
+        submenuDifficulty.add(easyRadioButtonItem);
+        submenuDifficulty.add(mediumRadioButtonItem);
+        submenuDifficulty.add(hardRadioButtonItem);
+        return submenuDifficulty;
     }
 
     /**
@@ -390,6 +435,33 @@ public class SnakeView extends JPanel {
     }
 
     /**
+     * Registers an ActionListener for the easy difficulty radio button.
+     *
+     * @param actionListener the ActionListener to be registered.
+     */
+    public void addEasyDifficultyListener(ActionListener actionListener) {
+        easyRadioButtonItem.addActionListener(actionListener);
+    }
+
+    /**
+     * Registers an ActionListener for the medium difficulty radio button.
+     *
+     * @param actionListener the ActionListener to be registered.
+     */
+    public void addMediumDifficultyListener(ActionListener actionListener) {
+        mediumRadioButtonItem.addActionListener(actionListener);
+    }
+
+    /**
+     * Registers an ActionListener for the hard difficulty radio button.
+     *
+     * @param actionListener the ActionListener to be registered.
+     */
+    public void addHardDifficultyListener(ActionListener actionListener) {
+        hardRadioButtonItem.addActionListener(actionListener);
+    }
+
+    /**
      * Creates an HTML string to format menu text, ensuring consistent appearance.
      * This method wraps the provided text in HTML tags and converts it to uppercase.
      *
@@ -398,5 +470,26 @@ public class SnakeView extends JPanel {
      */
     private String htmlCreator(String text) {
         return "<html><body style='padding:0;margin:0'>" + text.toUpperCase() + "</body></html>";
+    }
+
+    /**
+     * Removes HTML tags from a given string.
+     *
+     * @param text the text with potential HTML tags.
+     * @return the sanitized text without HTML tags.
+     */
+    public String removeHtml(String text) {
+        text = text.replace("<html><body style='padding:0;margin:0'>", "");
+        text = text.replace("</body></html>", "");
+        return text;
+    }
+
+    /**
+     * Retrieves the current difficulty setting as a lowercase string.
+     *
+     * @return the current difficulty setting in lowercase.
+     */
+    public String getDifficulty() {
+        return difficulty.toLowerCase();
     }
 }
