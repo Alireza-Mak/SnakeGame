@@ -103,8 +103,6 @@ class ObstacleTest {
         assertFalse(obstacle.isOutOfScreen(inScreen));
 
         ArrayList<Point> outScreen = new ArrayList<>();
-
-        outScreen = new ArrayList<>();
         outScreen.add(new Point(screenWidth + 1, 100)); // x is equal to screenWidth, out of bounds
         assertTrue(obstacle.isOutOfScreen(outScreen));
 
