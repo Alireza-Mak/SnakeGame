@@ -2,8 +2,7 @@ package Components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /**
  * CustomButton is a JButton subclass that allows customization of button appearance
@@ -39,7 +38,7 @@ public class CustomButton extends JButton {
      * Constructs a CustomButton with the specified text and border width.
      * Initializes the button properties and sets up default and hover colors.
      *
-     * @param text        the text to be displayed on the button
+     * @param text the text to be displayed on the button
      * @param borderWidth the width of the button's border
      */
     public CustomButton(String text, int borderWidth) {
@@ -114,12 +113,45 @@ public class CustomButton extends JButton {
     }
 
     /**
+     * MouseAdapter implementation to handle button state changes on mouse events.
+     * Changes button appearance based on whether the mouse is pressed, released,
+     * entered, or exited the button area.
+     */
+    private class ButtonMouseListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            updateButtonAppearance(pressedBackgroundColor, pressedBorderColor, pressedTextColor);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (isHovered) {
+                updateButtonAppearance(hoverBackgroundColor, hoverBorderColor, hoverTextColor);
+            } else {
+                updateButtonAppearance(defaultBackgroundColor, defaultBorderColor, defaultTextColor);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            updateButtonAppearance(hoverBackgroundColor, hoverBorderColor, hoverTextColor);
+            isHovered = true;
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            updateButtonAppearance(defaultBackgroundColor, defaultBorderColor, defaultTextColor);
+            isHovered = false;
+        }
+    }
+
+    /**
      * Updates the button's appearance by setting the background color, border color,
      * and text color. Repaints the button to reflect the new appearance.
      *
      * @param background the new background color
-     * @param border     the new border color
-     * @param text       the new text color
+     * @param border the new border color
+     * @param text the new text color
      */
     private void updateButtonAppearance(Color background, Color border, Color text) {
         backgroundColor = background;
@@ -294,38 +326,5 @@ public class CustomButton extends JButton {
      */
     public void setPressedBorderColor(Color pressedBorderColor) {
         this.pressedBorderColor = pressedBorderColor;
-    }
-
-    /**
-     * MouseAdapter implementation to handle button state changes on mouse events.
-     * Changes button appearance based on whether the mouse is pressed, released,
-     * entered, or exited the button area.
-     */
-    private class ButtonMouseListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            updateButtonAppearance(pressedBackgroundColor, pressedBorderColor, pressedTextColor);
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            if (isHovered) {
-                updateButtonAppearance(hoverBackgroundColor, hoverBorderColor, hoverTextColor);
-            } else {
-                updateButtonAppearance(defaultBackgroundColor, defaultBorderColor, defaultTextColor);
-            }
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            updateButtonAppearance(hoverBackgroundColor, hoverBorderColor, hoverTextColor);
-            isHovered = true;
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            updateButtonAppearance(defaultBackgroundColor, defaultBorderColor, defaultTextColor);
-            isHovered = false;
-        }
     }
 }

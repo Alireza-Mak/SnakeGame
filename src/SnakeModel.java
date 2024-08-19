@@ -16,13 +16,6 @@ import java.util.Random;
  */
 public class SnakeModel {
     private final Random rand;
-    private final int DEFAULT_DELAY;
-    private final int START_LENGTH;
-    private final Map<String, Integer> difficulty = new HashMap<>() {{
-        put("easy", 2);
-        put("medium", 4);
-        put("hard", 6);
-    }};
     private Map<String, Integer> screenProperties;
     private int appleX;
     private int appleY;
@@ -31,9 +24,16 @@ public class SnakeModel {
     private int[] snakeY;
     private char direction;
     private Timer timer;
+    private final int DEFAULT_DELAY;
+    private final int START_LENGTH;
     private int delay;
     private int score;
     private boolean isRunning;
+    private final Map<String, Integer> difficulty = new HashMap<>() {{
+        put("easy", 2);
+        put("medium", 4);
+        put("hard", 6);
+    }};
     private int delayStep;
 
     /**
@@ -55,21 +55,21 @@ public class SnakeModel {
     }
 
     /**
-     * Gets the current direction of the snake's movement.
-     *
-     * @return The direction of the snake.
-     */
-    public char getDirection() {
-        return direction;
-    }
-
-    /**
      * Sets the direction of the snake's movement.
      *
      * @param direction The direction of the snake ('U', 'D', 'L', 'R').
      */
     public void setDirection(char direction) {
         this.direction = direction;
+    }
+
+    /**
+     * Gets the current direction of the snake's movement.
+     *
+     * @return The direction of the snake.
+     */
+    public char getDirection() {
+        return direction;
     }
 
     /**
