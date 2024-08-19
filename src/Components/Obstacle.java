@@ -10,13 +10,12 @@ import java.util.Random;
  */
 public class Obstacle {
 
-    ArrayList<ArrayList<Point>> obstacles;
-
     private final int screenWidth;
     private final int screenHeight;
     private final int obstacleSize;
     private final Random random;
     private final String[] obstacleType = new String[]{"square", "rectangle", "triangle"};
+    ArrayList<ArrayList<Point>> obstacles;
 
     /**
      * Constructor to initialize the ObstacleCreator with screen dimensions.

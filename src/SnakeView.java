@@ -31,9 +31,8 @@ public class SnakeView extends JPanel {
     private static final Font GAME_OVER_FONT = new Font("Ink Free", Font.BOLD, 55);
     private static final Font FINAL_SCORE_FONT = new Font("Ink Free", Font.BOLD, 35);
     private static final Font MENU_FONT = new Font("Ink Free", Font.BOLD, 12);
-
-    private JFrame frame;
     private final Map<String, Integer> screenProperties;
+    private JFrame frame;
     private int appleX;
     private int appleY;
     private int[] snakeX;

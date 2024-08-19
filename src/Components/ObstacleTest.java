@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ObstacleTest {
 
-    private Obstacle obstacle;
     private final int screenWidth = 800;
     private final int screenHeight = 600;
     private final int obstacleSize = 20;
+    private Obstacle obstacle;
 
     @BeforeEach
     public void setUp() {
