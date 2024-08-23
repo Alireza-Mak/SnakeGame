@@ -43,14 +43,14 @@ public class Obstacle {
      *
      * @return an {@link ArrayList} of {@link Point} objects representing the obstacle
      */
-    public ArrayList<Point> generateObstacle() {
+    public ArrayList<Point> generatePoints() {
         Point base = generateRandomPoint();
-        int selectedIndex = random.nextInt(obstacleType.length - 1);
+        int selectedIndex = random.nextInt(obstacleType.length);
         String selectedType = obstacleType[selectedIndex];
-        ArrayList<Point> obstaclePoints = creteVectors(base, selectedType);
+        ArrayList<Point> obstaclePoints = createPoints(base, selectedType);
 
         if (isOutOfScreen(obstaclePoints)) {
-            return generateObstacle();
+            return generatePoints();
         } else return obstaclePoints;
     }
 
@@ -65,7 +65,7 @@ public class Obstacle {
      * @return an {@link ArrayList} of {@link Point} objects representing the shape's vertices
      * @throws IllegalStateException if {@code selectedType} is invalid
      */
-    public ArrayList<Point> creteVectors(Point base, String selectedType) {
+    public ArrayList<Point> createPoints(Point base, String selectedType) {
         ArrayList<Point> obstacle = new ArrayList<>();
         obstacle.add(base);
         switch (selectedType) {
@@ -110,8 +110,52 @@ public class Obstacle {
      */
     public boolean isOutOfScreen(ArrayList<Point> obstacle) {
         for (Point point : obstacle) {
-            if (point.x < 0 || point.x > screenWidth || point.y < 0 || point.y > screenHeight) {
+            if (point.x < 0 || point.x > screenWidth - obstacleSize || point.y < 0 || point.y > screenHeight - obstacleSize) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Generates a list of obstacles, avoiding collisions between them.
+     *
+     * @param numberOfObstacles The number of obstacles to generate.
+     * @return A list of obstacles, each represented as a list of {@link Point} objects.
+     */
+    public ArrayList<ArrayList<Point>> obstaclesGenerator(int numberOfObstacles) {
+        ArrayList<ArrayList<Point>> obstacles = new ArrayList<>();
+
+        for (int i = 0; i < numberOfObstacles; i++) {
+            ArrayList<Point> new_obstacle;
+            do {
+                new_obstacle = generatePoints();
+            } while (obstaclesCollision(obstacles, new_obstacle));
+
+            obstacles.add(new_obstacle);
+
+        }
+        return obstacles;
+    }
+
+    /**
+     * Checks if a new obstacle collides with any existing obstacles.
+     *
+     * @param obstacles   The current obstacles as a list of {@link Point} lists.
+     * @param newObstacle The new obstacle as a list of {@link Point} objects.
+     * @return {@code true} if there is a collision, {@code false} otherwise.
+     */
+    public boolean obstaclesCollision(ArrayList<ArrayList<Point>> obstacles, ArrayList<Point> newObstacle) {
+        if (obstacles.isEmpty()) {
+            return false;
+        }
+        for (ArrayList<Point> obstacle : obstacles) {
+            for (Point point : obstacle) {
+                for (Point newPoint : newObstacle) {
+                    if (point.x == newPoint.x && point.y == newPoint.y) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

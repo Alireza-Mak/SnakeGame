@@ -41,7 +41,7 @@ public class SnakeController {
     }
 
     private void startGame() {
-        this.snakeModel.startGame(new SnakeActionListener(), this.snakeView.getDifficulty());
+        this.snakeModel.startGame(new SnakeActionListener());
         updateView();
     }
 
@@ -54,6 +54,7 @@ public class SnakeController {
         this.snakeView.setSnakeX(this.snakeModel.getSnakeX());
         this.snakeView.setSnakeY(this.snakeModel.getSnakeY());
         this.snakeView.setScore(this.snakeModel.getScore());
+        this.snakeView.setObstaclesPoints(this.snakeModel.getObstaclesPoints());
         this.snakeView.setIsRunning(this.snakeModel.getIsRunning());
         this.snakeView.repaint();
     }
@@ -92,7 +93,7 @@ public class SnakeController {
          * @param keyCode the code of the key that was pressed.
          */
         private void handleResetButtonKey(int keyCode) {
-            if (keyCode == KeyEvent.VK_ENTER) {
+            if (keyCode == KeyEvent.VK_ENTER && !snakeModel.getIsRunning()) {
                 startGame();
                 snakeView.getResetButton().setVisible(false);
             }

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -38,6 +39,7 @@ public class SnakeView extends JPanel {
     private int appleY;
     private int[] snakeX;
     private int[] snakeY;
+    private ArrayList<ArrayList<Point>> obstaclesPoints;
     private int score;
     private boolean isRunning;
     private CustomButton resetButton;
@@ -92,6 +94,15 @@ public class SnakeView extends JPanel {
      */
     public void setAppleX(int appleX) {
         this.appleX = appleX;
+    }
+
+    /**
+     * Sets the list of obstacle points.
+     *
+     * @param obstaclesPoints a {@link ArrayList} of {@link ArrayList} of {@link Point} objects
+     */
+    public void setObstaclesPoints(ArrayList<ArrayList<Point>> obstaclesPoints) {
+        this.obstaclesPoints = obstaclesPoints;
     }
 
     /**
@@ -227,6 +238,7 @@ public class SnakeView extends JPanel {
         drawApple(g);
         drawSnake(g);
         drawScore(g);
+        drawObstacle(g);
     }
 
     /**
@@ -268,6 +280,20 @@ public class SnakeView extends JPanel {
         String scoreString = "Score: " + score;
         FontMetrics scoreFontMetrics = g.getFontMetrics(SCORE_FONT);
         g.drawString(scoreString, (SCREEN_WIDTH - scoreFontMetrics.stringWidth(scoreString)) / 2, SCORE_FONT.getSize());
+    }
+
+    /**
+     * Draws the obstacle on the game board.
+     *
+     * @param g The Graphics object used for painting.
+     */
+    private void drawObstacle(Graphics g) {
+        for (ArrayList<Point> points : obstaclesPoints) {
+            for (Point point : points) {
+                g.setColor(Color.BLACK);
+                g.fillRect(point.x, point.y, UNIT_SIZE, UNIT_SIZE);
+            }
+        }
     }
 
     /**

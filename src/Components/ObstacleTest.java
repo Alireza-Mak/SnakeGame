@@ -21,16 +21,16 @@ class ObstacleTest {
     }
 
     @Test
-    public void testGenerateObstacle() {
-        ArrayList<Point> generatedObstacle = obstacle.generateObstacle();
+    public void testGeneratePoints() {
+        ArrayList<Point> generatedObstacle = obstacle.generatePoints();
         assertNotNull(generatedObstacle);
         assertFalse(obstacle.isOutOfScreen(generatedObstacle));
     }
 
     @Test
-    public void testCreteVectorsTriangle() {
+    public void testCreatePointsTriangle() {
         Point base = new Point(100, 100);
-        ArrayList<Point> triangle = obstacle.creteVectors(base, "triangle");
+        ArrayList<Point> triangle = obstacle.createPoints(base, "triangle");
 
         assertEquals(3, triangle.size());
         assertEquals(new Point(100, 100), triangle.get(0));
@@ -39,9 +39,9 @@ class ObstacleTest {
     }
 
     @Test
-    public void testCreteVectorsRectangle() {
+    public void testCreatePointsRectangle() {
         Point base = new Point(100, 100);
-        ArrayList<Point> rectangle = obstacle.creteVectors(base, "rectangle");
+        ArrayList<Point> rectangle = obstacle.createPoints(base, "rectangle");
 
         assertEquals(6, rectangle.size());
         assertEquals(new Point(100, 100), rectangle.get(0));
@@ -53,9 +53,9 @@ class ObstacleTest {
     }
 
     @Test
-    public void testCreteVectorsSquare() {
+    public void testCreatePointsSquare() {
         Point base = new Point(100, 100);
-        ArrayList<Point> square = obstacle.creteVectors(base, "square");
+        ArrayList<Point> square = obstacle.createPoints(base, "square");
 
         assertEquals(4, square.size());
         assertEquals(new Point(100, 100), square.get(0));
@@ -65,9 +65,9 @@ class ObstacleTest {
     }
 
     @Test
-    public void testCreteVectorsInvalidType() {
+    public void testCreatePointsInvalidType() {
         Point base = new Point(100, 100);
-        assertThrows(IllegalStateException.class, () -> obstacle.creteVectors(base, "invalidType"));
+        assertThrows(IllegalStateException.class, () -> obstacle.createPoints(base, "invalidType"));
     }
 
     @Test
@@ -99,7 +99,7 @@ class ObstacleTest {
         assertFalse(obstacle.isOutOfScreen(inScreen));
 
         inScreen = new ArrayList<>();
-        inScreen.add(new Point(screenWidth - 1, screenHeight - 1)); // within bounds
+        inScreen.add(new Point(screenWidth - obstacleSize - 1, screenHeight - obstacleSize - 1)); // within bounds
         assertFalse(obstacle.isOutOfScreen(inScreen));
 
         ArrayList<Point> outScreen = new ArrayList<>();
@@ -120,12 +120,71 @@ class ObstacleTest {
     }
 
     @Test
-    public void testGenerateObstacleWithRecursion() {
+    public void testGeneratePointsWithRecursion() {
         // To force recursion, we create an obstacle that is likely out of bounds
         Obstacle obstacleStub = new Obstacle(40, 40, 20); // smaller screen size to force out-of-bounds
-        ArrayList<Point> generatedObstacle = obstacleStub.generateObstacle();
+        ArrayList<Point> generatedObstacle = obstacleStub.generatePoints();
 
         // The final obstacle should still be within bounds
         assertFalse(obstacleStub.isOutOfScreen(generatedObstacle));
+    }
+
+    @Test
+    void testObstaclesGenerator() {
+        // Check the Parameter
+        int numberOfObstacles = 0;
+        ArrayList<ArrayList<Point>> obstacles = obstacle.obstaclesGenerator(numberOfObstacles);
+        ArrayList<ArrayList<Point>> expected = new ArrayList<>();
+        assertEquals(expected, obstacles);
+
+        // Check the Parameter
+        numberOfObstacles = 3;
+        obstacles = obstacle.obstaclesGenerator(numberOfObstacles);
+        int expected2 = 3;
+        assertEquals(expected2, obstacles.size());
+    }
+
+
+    @Test
+    void tetObstaclesCollision() {
+        ArrayList<Point> obs = new ArrayList<>() {{
+            add(new Point(100, 100));
+            add(new Point(120, 120));
+            add(new Point(80, 120));
+        }};
+        boolean collisionObstacle = obstacle.obstaclesCollision(new ArrayList<>(), obs);
+        assertFalse(collisionObstacle);
+
+        ArrayList<ArrayList<Point>> obstacles = new ArrayList<>() {{
+            add(new ArrayList<>() {{
+                add(new Point(100, 100));
+                add(new Point(120, 120));
+                add(new Point(80, 120));
+            }});
+        }};
+        collisionObstacle = obstacle.obstaclesCollision(obstacles, obs);
+        assertTrue(collisionObstacle);
+
+        obstacles = new ArrayList<>() {{
+            add(new ArrayList<>() {{
+                add(new Point(80, 100));
+                add(new Point(120, 120));
+                add(new Point(80, 120));
+            }});
+        }};
+        collisionObstacle = obstacle.obstaclesCollision(obstacles, obs);
+
+        assertTrue(collisionObstacle);
+
+        obstacles = new ArrayList<>() {{
+            add(new ArrayList<>() {{
+                add(new Point(100, 120));
+                add(new Point(120, 140));
+                add(new Point(80, 140));
+            }});
+        }};
+        collisionObstacle = obstacle.obstaclesCollision(obstacles, obs);
+
+        assertFalse(collisionObstacle);
     }
 }

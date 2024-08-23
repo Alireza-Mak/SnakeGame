@@ -1,9 +1,9 @@
-import javax.swing.*;
+import Components.Obstacle;
+
+import javax.swing.Timer;
+import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -15,34 +15,37 @@ import java.util.Random;
  * @since 2024-08-06
  */
 public class SnakeModel {
-    private final Random rand;
+    private final Random random;
+    private final int DEFAULT_DELAY;
+    private final int START_LENGTH;
+    Map<String, Integer> DIFFICULTIES_TYPES = new HashMap<>() {{
+        put("EASY", 1);
+        put("MEDIUM", 3);
+        put("HARD", 4);
+    }};
     private Map<String, Integer> screenProperties;
     private int appleX;
     private int appleY;
+    ArrayList<ArrayList<Point>> obstaclesPoints;
     private int snakeLength;
     private int[] snakeX;
     private int[] snakeY;
     private char direction;
     private Timer timer;
-    private final int DEFAULT_DELAY;
-    private final int START_LENGTH;
     private int delay;
     private int score;
     private boolean isRunning;
-    private final Map<String, Integer> difficulty = new HashMap<>() {{
-        put("easy", 2);
-        put("medium", 4);
-        put("hard", 6);
-    }};
+    private String difficulty;
     private int delayStep;
 
     /**
      * Constructor to initialize the SnakeModel.
      */
     public SnakeModel() {
-        rand = new Random();
+        random = new Random();
         this.DEFAULT_DELAY = 100;
         this.START_LENGTH = 4;
+        setDifficulty(DIFFICULTIES_TYPES.keySet().iterator().next());
     }
 
     /**
@@ -79,6 +82,15 @@ public class SnakeModel {
      */
     public int getScore() {
         return score;
+    }
+
+    /**
+     * Gets the list of obstacle points.
+     *
+     * @return a {@link ArrayList} of {@link ArrayList} of {@link Point} objects
+     */
+    public ArrayList<ArrayList<Point>> getObstaclesPoints() {
+        return obstaclesPoints;
     }
 
     /**
@@ -141,7 +153,7 @@ public class SnakeModel {
      *
      * @param actionListener The ActionListener for the game timer.
      */
-    public void startGame(ActionListener actionListener, String difficulty) {
+    public void startGame(ActionListener actionListener) {
         score = 0;
         snakeLength = START_LENGTH;
         this.snakeX = new int[snakeLength];
@@ -149,10 +161,10 @@ public class SnakeModel {
         direction = 'R';
         isRunning = true;
         delay = DEFAULT_DELAY;
-        setDifficulty(difficulty);
         timer = new Timer(delay, actionListener);
         timer.start();
         createApple();
+        createObstacles();
     }
 
     /**
@@ -164,13 +176,24 @@ public class SnakeModel {
     }
 
     /**
+     * Creates a new apple at a random position on the screen.
+     */
+    private void createObstacles() {
+        int width = screenProperties.get("SCREEN_HEIGHT");
+        int height = screenProperties.get("SCREEN_HEIGHT");
+        int unitSize = screenProperties.get("UNIT_SIZE");
+        Obstacle obstacle = new Obstacle(width, height, unitSize);
+        obstaclesPoints = obstacle.obstaclesGenerator(DIFFICULTIES_TYPES.get(difficulty));
+    }
+
+    /**
      * Generates a random position for the apple within the screen limits.
      *
      * @param maxSize The maximum size (width or height) of the screen.
      * @return The random position.
      */
     private int generateRandomPosition(int maxSize) {
-        return rand.nextInt(maxSize / screenProperties.get("UNIT_SIZE")) * screenProperties.get("UNIT_SIZE");
+        return random.nextInt(maxSize / screenProperties.get("UNIT_SIZE")) * screenProperties.get("UNIT_SIZE");
     }
 
     /**
@@ -236,12 +259,13 @@ public class SnakeModel {
     }
 
     /**
-     * Sets the game's difficulty level by adjusting the delay step.
+     * Sets the difficulty level and updates the delay step accordingly.
      *
-     * @param difficulty the difficulty level as a string (e.g., "easy", "medium", "hard").
+     * @param difficulty the difficulty level as a {@link String}
      */
     public void setDifficulty(String difficulty) {
-        delayStep = this.difficulty.get(difficulty.toLowerCase());
+        this.difficulty = difficulty.toUpperCase();
+        setDelay();
     }
 
     /**
@@ -283,5 +307,12 @@ public class SnakeModel {
             timer.stop();
             timer = null;
         }
+    }
+
+    /**
+     * Sets the delay step based on the current difficulty level.
+     */
+    public void setDelay() {
+        delayStep = DIFFICULTIES_TYPES.get(this.difficulty);
     }
 }
