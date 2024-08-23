@@ -54,7 +54,7 @@ public class SnakeController {
         this.snakeView.setSnakeX(this.snakeModel.getSnakeX());
         this.snakeView.setSnakeY(this.snakeModel.getSnakeY());
         this.snakeView.setScore(this.snakeModel.getScore());
-        this.snakeView.setObstaclesPoints(this.snakeModel.getObstaclesPoints());
+        this.snakeView.setObstaclesPoints(this.snakeModel.getObstacles());
         this.snakeView.setIsRunning(this.snakeModel.getIsRunning());
         this.snakeView.repaint();
     }
@@ -199,6 +199,7 @@ public class SnakeController {
     private class AddEasyDifficultyListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println("Easy");
             snakeModel.setDifficulty(snakeView.removeHtml(snakeView.getEasyRadioButtonItem().getText()));
             snakeView.getEasyRadioButtonItem().setSelected(true);
         }

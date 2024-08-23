@@ -26,7 +26,7 @@ public class SnakeModel {
     private Map<String, Integer> screenProperties;
     private int appleX;
     private int appleY;
-    ArrayList<ArrayList<Point>> obstaclesPoints;
+    ArrayList<ArrayList<Point>> obstacles= new ArrayList<>();
     private int snakeLength;
     private int[] snakeX;
     private int[] snakeY;
@@ -89,8 +89,8 @@ public class SnakeModel {
      *
      * @return a {@link ArrayList} of {@link ArrayList} of {@link Point} objects
      */
-    public ArrayList<ArrayList<Point>> getObstaclesPoints() {
-        return obstaclesPoints;
+    public ArrayList<ArrayList<Point>> getObstacles() {
+        return obstacles;
     }
 
     /**
@@ -171,8 +171,12 @@ public class SnakeModel {
      * Creates a new apple at a random position on the screen.
      */
     private void createApple() {
-        appleX = generateRandomPosition(screenProperties.get("SCREEN_WIDTH"));
-        appleY = generateRandomPosition(screenProperties.get("SCREEN_HEIGHT"));
+        do {
+            appleX = generateRandomPosition(screenProperties.get("SCREEN_WIDTH"));
+            appleY = generateRandomPosition(screenProperties.get("SCREEN_HEIGHT"));
+        } while (checkObstacleCollision(appleX, appleY));
+
+
     }
 
     /**
@@ -183,7 +187,7 @@ public class SnakeModel {
         int height = screenProperties.get("SCREEN_HEIGHT");
         int unitSize = screenProperties.get("UNIT_SIZE");
         Obstacle obstacle = new Obstacle(width, height, unitSize);
-        obstaclesPoints = obstacle.obstaclesGenerator(DIFFICULTIES_TYPES.get(difficulty));
+        obstacles = obstacle.obstaclesGenerator(DIFFICULTIES_TYPES.get(difficulty));
     }
 
     /**
@@ -280,23 +284,40 @@ public class SnakeModel {
     }
 
     /**
-     * Determines if the snake has collided with the wall or itself.
+     * Checks for collisions with the screen boundaries, the snake's body, or obstacles.
      *
-     * @return {@code true} if the snake hits the wall or its own body, {@code false} otherwise.
+     * @return {@code true} if a collision is detected, {@code false} otherwise.
      */
     private boolean isCollision() {
-        boolean isWallCollision = false, isSelfCollision = false;
-
+        // Check Screen Collision
         if (snakeX[0] >= screenProperties.get("SCREEN_WIDTH") || snakeX[0] < 0 || snakeY[0] >= screenProperties.get("SCREEN_HEIGHT") || snakeY[0] < 0)
-            isWallCollision = true;
+            return true;
 
+        // Check Body Collision
         for (int i = 1; i < snakeLength; i++) {
-            if (snakeX[i] == snakeX[0] && snakeY[i] == snakeY[0]) {
-                isSelfCollision = true;
-                break;
+            if (snakeX[i] == snakeX[0] && snakeY[i] == snakeY[0]) return true;
+        }
+
+        // Check Obstacles Collision
+        return checkObstacleCollision(snakeX[0], snakeY[0]);
+    }
+
+    /**
+     * Checks if a point at the specified coordinates collides with any obstacles.
+     *
+     * @param x The x-coordinate of the point to check.
+     * @param y The y-coordinate of the point to check.
+     * @return {@code true} if the point collides with any obstacle, {@code false} otherwise.
+     */
+    private boolean checkObstacleCollision(int x, int y) {
+        if (!obstacles.isEmpty()) {
+            for (ArrayList<Point> obstacle : obstacles) {
+                for (Point point : obstacle) {
+                    if (x == point.x && y == point.y) return true;
+                }
             }
         }
-        return isWallCollision || isSelfCollision;
+        return false;
     }
 
     /**

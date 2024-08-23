@@ -48,7 +48,6 @@ public class SnakeView extends JPanel {
     private JMenuItem menuDisableGrid;
     private Boolean isShowingGrid = false;
     private JRadioButtonMenuItem easyRadioButtonItem, mediumRadioButtonItem, hardRadioButtonItem;
-    private String difficulty;
 
     /**
      * Constructor for SnakeView class. Initializes the screen properties,
@@ -401,8 +400,6 @@ public class SnakeView extends JPanel {
 
         // Set the menu bar on the frame
         frame.setJMenuBar(menuBar);
-
-        difficulty = removeHtml(easyRadioButtonItem.getText()).toLowerCase();
     }
 
     private JMenu getSubmenuDifficulty() {
@@ -508,14 +505,5 @@ public class SnakeView extends JPanel {
         text = text.replace("<html><body style='padding:0;margin:0'>", "");
         text = text.replace("</body></html>", "");
         return text;
-    }
-
-    /**
-     * Retrieves the current difficulty setting as a lowercase string.
-     *
-     * @return the current difficulty setting in lowercase.
-     */
-    public String getDifficulty() {
-        return difficulty.toLowerCase();
     }
 }

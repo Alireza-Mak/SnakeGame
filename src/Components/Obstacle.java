@@ -7,6 +7,10 @@ import java.util.Random;
 
 /**
  * Responsible for creating and placing obstacles on the game board.
+ *
+ * @author Alireza Mak
+ * @version 1.0
+ * @since 2024-08-12
  */
 public class Obstacle {
 
