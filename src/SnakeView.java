@@ -48,6 +48,9 @@ public class SnakeView extends JPanel {
     private JMenuItem menuDisableGrid;
     private Boolean isShowingGrid = false;
     private JRadioButtonMenuItem easyRadioButtonItem, mediumRadioButtonItem, hardRadioButtonItem;
+    private int numerator;
+    private int denominator;
+    private int DISTANCE_STEPS;
 
     /**
      * Constructor for SnakeView class. Initializes the screen properties,
@@ -155,14 +158,23 @@ public class SnakeView extends JPanel {
         return screenProperties;
     }
 
+    /**
+     * @return the Easy difficulty radio button menu item.
+     */
     public JRadioButtonMenuItem getEasyRadioButtonItem() {
         return easyRadioButtonItem;
     }
 
+    /**
+     * @return the Medium difficulty radio button menu item.
+     */
     public JRadioButtonMenuItem getMediumRadioButtonItem() {
         return mediumRadioButtonItem;
     }
 
+    /**
+     * @return the Hard difficulty radio button menu item.
+     */
     public JRadioButtonMenuItem getHardRadioButtonItem() {
         return hardRadioButtonItem;
     }
@@ -301,16 +313,36 @@ public class SnakeView extends JPanel {
      * @param g The Graphics object used for painting.
      */
     private void drawGameOver(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.setFont(GAME_OVER_FONT);
-        String gameOverString = "Game Over";
-        FontMetrics gameOverFontMetrics = g.getFontMetrics(GAME_OVER_FONT);
-        g.drawString(gameOverString, (SCREEN_WIDTH - gameOverFontMetrics.stringWidth(gameOverString)) / 2, SCREEN_HEIGHT / 2);
+        numerator = 0;
+        denominator = 12 ;
+        DISTANCE_STEPS = 2;
+        // Draw Game Over Text
+        setNewPosition(g, Color.BLACK, GAME_OVER_FONT, "Game Over");
 
-        g.setFont(FINAL_SCORE_FONT);
-        String scoreString = "Your final score is " + score;
-        FontMetrics scoreFontMetrics = g.getFontMetrics(FINAL_SCORE_FONT);
-        g.drawString(scoreString, (SCREEN_WIDTH - scoreFontMetrics.stringWidth(scoreString)) / 2, SCREEN_HEIGHT / 2 + scoreFontMetrics.getHeight());
+        // Draw Final Score Text
+        setNewPosition(g, Color.BLUE, FINAL_SCORE_FONT, "Your final score is " + score);
+
+        // Draw The best Score Text
+        setNewPosition(g, Color.GREEN, FINAL_SCORE_FONT, "The best score is " + "alireza");
+    }
+
+    /**
+     * Draws centered text on the screen at the next vertical position.
+     *
+     * @param g     Graphics object used for drawing.
+     * @param color Text color.
+     * @param font  Font to use.
+     * @param text  Text to display.
+     */
+    public void setNewPosition(Graphics g, Color color, Font font, String text) {
+        numerator += DISTANCE_STEPS;
+        g.setColor(color);
+        g.setFont(font);
+        Point newPosition = new Point();
+        FontMetrics fontMetrics = g.getFontMetrics(font);
+        newPosition.x = (SCREEN_WIDTH - fontMetrics.stringWidth(text)) / 2;
+        newPosition.y = (SCREEN_HEIGHT / denominator) * numerator;
+        g.drawString(text, newPosition.x, newPosition.y);
     }
 
     /**
@@ -402,6 +434,11 @@ public class SnakeView extends JPanel {
         frame.setJMenuBar(menuBar);
     }
 
+    /**
+     * Creates a submenu for selecting game difficulty with radio button options.
+     *
+     * @return A JMenu containing Easy, Medium, and Hard difficulty options.
+     */
     private JMenu getSubmenuDifficulty() {
         JMenu submenuDifficulty = new JMenu(htmlCreator("Select Difficulty"));
 
@@ -435,7 +472,6 @@ public class SnakeView extends JPanel {
     public void addMenuQuitListener(ActionListener actionListener) {
         menuQuit.addActionListener(actionListener);
     }
-
 
     /**
      * Adds an ActionListener to the "Enable Grid" menu item.
